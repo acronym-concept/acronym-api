@@ -1,0 +1,30 @@
+{
+  "name": "acronym-serverless-api",
+  "version": "1.0.0",
+  "description": "serverless api",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acronym-concept/api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/acronym-concept/api/issues"
+  },
+  "homepage": "https://github.com/acronym-concept/api#readme",
+  "dependencies": {
+    "aws-sdk": "^2.269.1",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "serverless-http": "^1.6.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "serverless-dynamodb-local": "^0.2.30",
+    "serverless-offline": "^3.25.5"
+  }
+}
