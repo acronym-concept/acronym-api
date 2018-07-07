@@ -9,8 +9,6 @@ const USERS_TABLE = process.env.USERS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
 let dynamoDb;
 
-const IS_OFFLINE = process.env.IS_OFFLINE;
-let dynamoDb;
 if (IS_OFFLINE === 'true') {
   dynamoDb = new AWS.DynamoDB.DocumentClient({
     region: 'localhost',
