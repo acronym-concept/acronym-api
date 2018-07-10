@@ -9,6 +9,10 @@ custom:
     start:
       migrate: true
       # inMemory: true
+  serverless-offline:
+    babelOptions:
+      presets: ["es2015", "stage-2"]
+
 
 plugins:
   - serverless-dynamodb-local
@@ -47,7 +51,6 @@ functions:
     handler: express/index.handler
     events:
       - http: 'POST /users'
-
 
 resources:
   Resources:

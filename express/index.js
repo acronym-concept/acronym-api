@@ -1,3 +1,4 @@
+import 'babel-register';
 import bodyParser from 'body-parser';
 import serverless from 'serverless-http';
 import express from 'express';
@@ -6,7 +7,7 @@ import dynamoDb from '../libs/dynamodb-lib';
 require('dotenv').config();
 
 const app = express();
-const { DYNAMODB_TABLE } = process.env;
+const { USERS_TABLE } = process.env;
 
 app.use(bodyParser.json({ strict: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -18,7 +19,7 @@ app.get('/', (req, res) => {
 // Get User endpoint
 app.get('/users/:userId', (req, res) => {
   const params = {
-    TableName: DYNAMODB_TABLE,
+    TableName: USERS_TABLE,
     Key: {
       userId: req.params.userId,
     },
@@ -48,7 +49,7 @@ app.post('/users', (req, res) => {
   }
 
   const params = {
-    TableName: DYNAMODB_TABLE,
+    TableName: USERS_TABLE,
     Item: {
       userId,
       name,

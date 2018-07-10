@@ -1,6 +1,6 @@
 {
   "presets": [
-    ["env", { "node": "current" }],
+    ["es2015", "env"],
     "stage-3"
   ]
 }
