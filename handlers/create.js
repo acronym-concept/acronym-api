@@ -1,27 +1,26 @@
 const uuid = require('uuid');
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const AWS = require('aws-sdk');
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: 'us-west-1' });
 
 module.exports.create = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
-  if (typeof data.text !== 'string') {
+  if (typeof data.username !== 'string') {
     console.error('Validation Failed');
     callback(null, {
       statusCode: 400,
       headers: { 'Content-Type': 'text/plain' },
-      body: 'Couldn\'t create the todo item.',
+      body: 'Validation failed: Couldn\'t add user.',
     });
     return;
   }
 
   const params = {
-    TableName: process.env.DYNAMODB_TABLE,
+    TableName: process.env.USERS_TABLE,
     Item: {
-      id: uuid.v1(),
-      text: data.text,
-      checked: false,
+      userId: uuid.v1(),
+      username: data.username,
       createdAt: timestamp,
       updatedAt: timestamp,
     },
@@ -35,7 +34,7 @@ module.exports.create = (event, context, callback) => {
       callback(null, {
         statusCode: error.statusCode || 501,
         headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t create the todo item.',
+        body: 'Server error: Couldn\'t add user.',
       });
       return;
     }

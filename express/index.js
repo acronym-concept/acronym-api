@@ -1,56 +1,47 @@
-const serverless = require('serverless-http');
-const bodyParser = require('body-parser');
-const express = require('express')
-const app = express()
-const AWS = require('aws-sdk');
+import 'babel-register';
+import bodyParser from 'body-parser';
+import serverless from 'serverless-http';
+import express from 'express';
+import dynamoDb from '../libs/dynamodb-lib';
 
+require('dotenv').config();
 
-const USERS_TABLE = process.env.USERS_TABLE;
-const IS_OFFLINE = process.env.IS_OFFLINE;
-let dynamoDb;
-
-if (IS_OFFLINE === 'true') {
-  dynamoDb = new AWS.DynamoDB.DocumentClient({
-    region: 'localhost',
-    endpoint: 'http://localhost:8000'
-  })
-  console.log(dynamoDb);
-} else {
-  dynamoDb = new AWS.DynamoDB.DocumentClient();
-};
+const app = express();
+const { USERS_TABLE } = process.env;
 
 app.use(bodyParser.json({ strict: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-})
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
 // Get User endpoint
-app.get('/users/:userId', function (req, res) {
+app.get('/users/:userId', (req, res) => {
   const params = {
     TableName: USERS_TABLE,
     Key: {
       userId: req.params.userId,
     },
-  }
+  };
 
   dynamoDb.get(params, (error, result) => {
+    console.log('result', result);
     if (error) {
       console.log(error);
       res.status(400).json({ error: 'Could not get user' });
     }
     if (result.Item) {
-      const {userId, name} = result.Item;
-      res.json({ userId, name });
+      const { userId, username } = result.Item;
+      res.json({ userId, username });
     } else {
-      res.status(404).json({ error: "User not found" });
+      res.status(404).json({ Error: 'User not found' });
     }
   });
-})
+});
 
 // Create User endpoint
-app.post('/users', function (req, res) {
+app.post('/users', (req, res) => {
   const { userId, name } = req.body;
   if (typeof userId !== 'string') {
     res.status(400).json({ error: '"userId" must be a string' });
@@ -61,8 +52,8 @@ app.post('/users', function (req, res) {
   const params = {
     TableName: USERS_TABLE,
     Item: {
-      userId: userId,
-      name: name,
+      userId,
+      name,
     },
   };
 
@@ -73,6 +64,6 @@ app.post('/users', function (req, res) {
     }
     res.json({ userId, name });
   });
-})
+});
 
 module.exports.handler = serverless(app);

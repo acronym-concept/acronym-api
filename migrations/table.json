@@ -3,13 +3,13 @@
   "TableName": "serverless-rest-api-with-dynamodb-dev",
   "KeySchema": [
     {
-      "AttributeName": "id",
+      "AttributeName": "userId",
       "KeyType": "HASH"
     }
-    ],
+  ],
     "AttributeDefinitions": [
       {
-        "AttributeName": "id",
+        "AttributeName": "userId",
         "AttributeType": "S"
       }
     ],

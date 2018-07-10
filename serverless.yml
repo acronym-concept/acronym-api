@@ -8,7 +8,11 @@ custom:
   dynamodb:
     start:
       migrate: true
-      # inMemory: true
+      inMemory: true
+  serverless-offline:
+    babelOptions:
+      presets: ["es2015", "stage-2"]
+
 
 plugins:
   - serverless-dynamodb-local
@@ -35,7 +39,7 @@ provider:
 
 functions:
   app:
-    handler: express/index.handler
+    handler: handlers/home.hello
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
@@ -44,10 +48,9 @@ functions:
     events:
       - http: 'GET /users/{proxy+}'
   createUser:
-    handler: express/index.handler
+    handler: handlers/create.create
     events:
       - http: 'POST /users'
-
 
 resources:
   Resources:

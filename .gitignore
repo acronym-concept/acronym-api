@@ -2,7 +2,11 @@
 node_modules
 jspm_packages
 
+# Optional npm cache directory
+.npm
+
 # Serverless directories
+.webpack
 .serverless
 
 # Environment variables
