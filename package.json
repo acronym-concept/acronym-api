@@ -17,14 +17,22 @@
   },
   "homepage": "https://github.com/acronym-concept/api#readme",
   "dependencies": {
-    "aws-sdk": "^2.269.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "serverless-http": "^1.6.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "aws-sdk": "^2.271.1",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "jest": "^23.4.0",
     "serverless-dynamodb-local": "^0.2.30",
-    "serverless-offline": "^3.25.5"
+    "serverless-offline": "^3.25.5",
+    "serverless-webpack": "^5.2.0",
+    "webpack": "^4.15.1",
+    "webpack-node-externals": "^1.7.2"
   }
 }
