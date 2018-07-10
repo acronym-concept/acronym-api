@@ -26,15 +26,16 @@ app.get('/users/:userId', (req, res) => {
   };
 
   dynamoDb.get(params, (error, result) => {
+    console.log('result', result);
     if (error) {
       console.log(error);
       res.status(400).json({ error: 'Could not get user' });
     }
     if (result.Item) {
-      const { userId, name } = result.Item;
-      res.json({ userId, name });
+      const { userId, username } = result.Item;
+      res.json({ userId, username });
     } else {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ Error: 'User not found' });
     }
   });
 });

@@ -11,8 +11,7 @@ if (IS_OFFLINE === 'true') {
     region: 'localhost',
     endpoint: 'http://localhost:8000',
   });
-  console.log('PROCESS.ENV :', process.env);
-  console.log(dynamoDb);
+  console.log('DynamoDB: Connected to localhost on port 8000');
 } else {
   dynamoDb = new AWS.DynamoDB.DocumentClient();
 }
