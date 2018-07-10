@@ -1,6 +1,6 @@
 {
   "presets": [
-    ["env", { "node": "8.11" }],
+    ["env", { "node": "current" }],
     "stage-3"
   ]
 }
