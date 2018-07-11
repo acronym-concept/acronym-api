@@ -44,9 +44,9 @@ functions:
       - http: ANY /
       - http: 'ANY {proxy+}'
   getUser:
-    handler: express/index.handler
+    handler: handlers/getUser.byId
     events:
-      - http: 'GET /users/{proxy+}'
+      - http: 'GET /users/{id}'
   createUser:
     handler: handlers/create.create
     events:
