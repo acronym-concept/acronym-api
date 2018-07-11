@@ -1,16 +1,15 @@
 const uuid = require('uuid');
 const DynamoDB = require('../libs/dynamodb-lib');
+const { success, failure } = require('../libs/response-lib');
 
 module.exports.create = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
+
+  // quick validation
   if (typeof data.username !== 'string') {
-    console.error('Validation Failed');
-    callback(null, {
-      statusCode: 400,
-      headers: { 'Content-Type': 'text/plain' },
-      body: 'Validation failed: Couldn\'t add user.',
-    });
+    console.error('Error: validation failed');
+    callback(null, failure('Validation failed: Couldn\'t add user.'));
     return;
   }
 
@@ -25,24 +24,14 @@ module.exports.create = (event, context, callback) => {
     },
   };
 
-  // write the todo to the database
-  DynamoDB.put(params, (error) => {
-    // handle potential errors
+  DynamoDB.put(params, (error, response) => {
     if (error) {
       console.error('Error:', error.message);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Server error: Couldn\'t add user.',
-      });
+      callback(null, failure('Server error: Could not create user.'));
       return;
     }
 
     // create a response
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify(params.Item),
-    };
-    callback(null, response);
+    callback(null, success(response.Item));
   });
 };
