@@ -2,7 +2,7 @@ const uuid = require('uuid');
 const DynamoDB = require('../libs/dynamodb-lib');
 const { success, failure } = require('../libs/response-lib');
 
-module.exports.create = (event, context, callback) => {
+module.exports.user = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
 
@@ -24,7 +24,7 @@ module.exports.create = (event, context, callback) => {
     },
   };
 
-  DynamoDB.put(params, (error, response) => {
+  DynamoDB.put(params, (error) => {
     if (error) {
       console.error('Error:', error.message);
       callback(null, failure('Server error: Could not create user.'));
@@ -32,6 +32,6 @@ module.exports.create = (event, context, callback) => {
     }
 
     // create a response
-    callback(null, success(response.Item));
+    callback(null, success(params.Item));
   });
 };

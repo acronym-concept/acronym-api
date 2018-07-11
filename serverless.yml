@@ -4,11 +4,13 @@ app: acronym
 tenant: kevinvoduy
 
 custom:
-  tableName: 'users-table-${self:provider.stage}'
+  tableName: "users-table-${self:provider.stage}"
   dynamodb:
     start:
-      migrate: true
+      port: 8000
       inMemory: true
+      migrate: true
+      seed: true
   serverless-offline:
     babelOptions:
       presets: ["es2015", "stage-3"]
@@ -16,7 +18,7 @@ custom:
 
 plugins:
   - serverless-dynamodb-local
-  - serverless-offline #serverless-offline needs to be last in the list
+  - serverless-offline #needs to be last in the list
 
 provider:
   name: aws
@@ -42,29 +44,29 @@ functions:
     handler: handlers/home.hello
     events:
       - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http: "ANY {proxy+}"
   getUser:
     handler: handlers/getUser.byId
     events:
-      - http: 'GET /users/{id}'
+      - http: "GET /users/{id}"
   createUser:
-    handler: handlers/create.create
+    handler: handlers/create.user
     events:
-      - http: 'POST /users'
+      - http: "POST /users"
 
 resources:
   Resources:
     UsersDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: userId
-            AttributeType: S
+            AttributeName: "userId"
+            AttributeType: "S"
         KeySchema:
           -
-            AttributeName: userId
-            KeyType: HASH
+            AttributeName: "userId"
+            KeyType: "HASH"
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

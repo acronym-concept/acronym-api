@@ -5,19 +5,11 @@
     {
       "AttributeName": "userId",
       "KeyType": "HASH"
-    },
-    {
-      "AttributeName": "username",
-      "KeyType": "HASH"
     }
   ],
     "AttributeDefinitions": [
       {
         "AttributeName": "userId",
-        "AttributeType": "S"
-      },
-      {
-        "AttributeName": "username",
         "AttributeType": "S"
       }
     ],

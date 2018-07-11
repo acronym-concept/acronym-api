@@ -26,6 +26,6 @@ module.exports.byId = (event, context, callback) => {
     }
 
     // create response
-    callback(null, success(response.Item));
+    callback(null, success(response));
   });
 };
