@@ -2,8 +2,7 @@ const uuid = require('uuid');
 const DynamoDB = require('../libs/dynamodb-lib');
 const { success, failure } = require('../libs/response-lib');
 
-module.exports.user = (event, context, callback) => {
-  const timestamp = new Date().getTime();
+module.exports.createCart = (event, context, callback) => {
   const data = JSON.parse(event.body);
 
   // quick validation
@@ -14,13 +13,10 @@ module.exports.user = (event, context, callback) => {
   }
 
   const params = {
-    TableName: process.env.USERS_TABLE,
+    TableName: process.env.CART_TABLE,
     Item: {
-      userId: uuid.v1(),
-      username: data.username,
-      cart: [],
-      createdAt: timestamp,
-      updatedAt: timestamp,
+      cartId: uuid.v1(),
+      userId: data.username,
     },
   };
 

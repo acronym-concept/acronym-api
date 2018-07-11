@@ -4,10 +4,9 @@ app: acronym
 tenant: kevinvoduy
 
 custom:
-  tableName: "users-table-${self:provider.stage}"
   dynamodb:
     start:
-      port: 8000
+      port: 8002
       inMemory: true
       migrate: true
       seed: true
@@ -37,37 +36,43 @@ provider:
       Resource:
         - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn" ] }
   environment:
-    USERS_TABLE: ${self:custom.tableName}
+    USERS_TABLE: "user-table"
 
 functions:
-  app:
-    handler: handlers/home.hello
-    events:
-      - http: ANY /
-      - http: "ANY {proxy+}"
-  getUser:
-    handler: handlers/getUser.byId
-    events:
-      - http: "GET /users/{id}"
   createUser:
     handler: handlers/create.user
     events:
       - http: "POST /users"
+  getUser:
+    handler: handlers/getUser.byId
+    events:
+      - http: "GET /users/{id}"
+
+  addItemToCart:
+    handler: handlers/addtoCart.addItem
+    events:
+      - http: "PUT /users/{id}"
 
 resources:
   Resources:
-    UsersDynamoDBTable:
+    UserTable:
       Type: "AWS::DynamoDB::Table"
       Properties:
         AttributeDefinitions:
           -
             AttributeName: "userId"
             AttributeType: "S"
+          -
+            AttributeName: "cart"
+            AttributeType: "S"
         KeySchema:
           -
             AttributeName: "userId"
             KeyType: "HASH"
+          -
+            AttributeName: "cart"
+            KeyType: "RANGE"
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:custom.tableName}
+        TableName: "user-table"
