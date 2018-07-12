@@ -1,18 +1,15 @@
 const uuid = require('uuid');
-const AWS = require('aws-sdk');
+const DynamoDB = require('../libs/dynamodb-lib');
+const { success, failure } = require('../libs/response-lib');
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: 'us-west-1' });
-
-module.exports.create = (event, context, callback) => {
+module.exports.user = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
+
+  // quick validation
   if (typeof data.username !== 'string') {
-    console.error('Validation Failed');
-    callback(null, {
-      statusCode: 400,
-      headers: { 'Content-Type': 'text/plain' },
-      body: 'Validation failed: Couldn\'t add user.',
-    });
+    console.error('Error: validation failed');
+    callback(null, failure('Validation failed: Couldn\'t add user.'));
     return;
   }
 
@@ -21,29 +18,19 @@ module.exports.create = (event, context, callback) => {
     Item: {
       userId: uuid.v1(),
       username: data.username,
+      cart: [],
       createdAt: timestamp,
       updatedAt: timestamp,
     },
   };
 
-  // write the todo to the database
-  dynamoDb.put(params, (error) => {
-    // handle potential errors
+  DynamoDB.put(params, (error) => {
     if (error) {
-      console.error(error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Server error: Couldn\'t add user.',
-      });
-      return;
+      console.error('Error:', error.message);
+      callback(null, failure('Server error: Could not create user.'));
     }
 
     // create a response
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify(params.Item),
-    };
-    callback(null, response);
+    callback(null, success(params.Item));
   });
 };

@@ -4,19 +4,20 @@ app: acronym
 tenant: kevinvoduy
 
 custom:
-  tableName: 'users-table-${self:provider.stage}'
   dynamodb:
     start:
-      migrate: true
+      port: 8002
       inMemory: true
+      migrate: true
+      seed: true
   serverless-offline:
     babelOptions:
-      presets: ["es2015", "stage-2"]
+      presets: ["es2015", "stage-3"]
 
 
 plugins:
   - serverless-dynamodb-local
-  - serverless-offline #serverless-offline needs to be last in the list
+  - serverless-offline #needs to be last in the list
 
 provider:
   name: aws
@@ -35,37 +36,49 @@ provider:
       Resource:
         - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn" ] }
   environment:
-    USERS_TABLE: ${self:custom.tableName}
+    USERS_TABLE: "user-table"
 
 functions:
   app:
     handler: handlers/home.hello
     events:
-      - http: ANY /
-      - http: 'ANY {proxy+}'
-  getUser:
-    handler: express/index.handler
-    events:
-      - http: 'GET /users/{proxy+}'
+      - http: "GET /"
+      - http: "GET /{proxy+}"
+
   createUser:
-    handler: handlers/create.create
+    handler: handlers/create.user
     events:
-      - http: 'POST /users'
+      - http: "POST /users"
+  getUser:
+    handler: handlers/getUser.byId
+    events:
+      - http: "GET /users/{id}"
+
+  addItemToCart:
+    handler: handlers/addToCart.addItem
+    events:
+      - http: "PUT /users/cart/add/{id}"
 
 resources:
   Resources:
     UsersDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       Properties:
+        TableName: "user-table"
         AttributeDefinitions:
           -
-            AttributeName: userId
-            AttributeType: S
+            AttributeName: "userId"
+            AttributeType: "S"
+          -
+            AttributeName: "cart"
+            AttributeType: "S"
         KeySchema:
           -
-            AttributeName: userId
-            KeyType: HASH
+            AttributeName: "userId"
+            KeyType: "HASH"
+          -
+            AttributeName: "cart"
+            KeyType: "RANGE"
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:custom.tableName}
