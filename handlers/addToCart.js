@@ -25,7 +25,7 @@ module.exports.addItem = (event, context, callback) => {
         type: item.type ? item.type : null,
       }],
     },
-    ReturnValues: 'UPDATED_NEW',
+    ReturnValues: 'ALL_NEW',
   };
 
   DynamoDB.update(params, (error, response) => {

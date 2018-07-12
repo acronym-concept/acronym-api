@@ -39,6 +39,12 @@ provider:
     USERS_TABLE: "user-table"
 
 functions:
+  app:
+    handler: handlers/home.hello
+    events:
+      - http: "GET /"
+      - http: "GET /{proxy+}"
+
   createUser:
     handler: handlers/create.user
     events:
@@ -49,15 +55,16 @@ functions:
       - http: "GET /users/{id}"
 
   addItemToCart:
-    handler: handlers/addtoCart.addItem
+    handler: handlers/addToCart.addItem
     events:
-      - http: "PUT /users/{id}"
+      - http: "PUT /users/cart/add/{id}"
 
 resources:
   Resources:
-    UserTable:
+    UsersDynamoDBTable:
       Type: "AWS::DynamoDB::Table"
       Properties:
+        TableName: "user-table"
         AttributeDefinitions:
           -
             AttributeName: "userId"
@@ -75,4 +82,3 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: "user-table"
