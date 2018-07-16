@@ -11,3 +11,24 @@ serverless offline start
 ```bash
 serverless dynamodb migrate
 ```
+
+## Endpoints
+- app
+  - GET /
+- createUser
+  - POST /users
+    - payload: {
+		username
+    	}
+- getUser
+	- GET /users/:id
+	- payload: {
+		id
+		}
+- addItemToCart
+	- PUT /users/car/add/:id
+	- payload: {
+		id,
+		itemId,
+		type
+		}
